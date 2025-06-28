@@ -21,7 +21,7 @@ export interface IEventEmitter {
 	/** Подписаться на событие */
 	on(event: string, callback: (data: unknown) => void): void;
 	/** Отписаться от события */
-	off(event: string, callback: Function): void;
+	off(event: string, callback: (data: unknown) => void): void;
 }
 
 /**
