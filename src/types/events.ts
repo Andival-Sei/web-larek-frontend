@@ -18,7 +18,7 @@ export interface ICatalogEvents {
  */
 export interface IBasketEvents {
 	/** Состояние корзины изменилось */
-	'basket:changed': IBasketState;
+	'basket:change': { items: string[] }; // массив id товаров
 	/** Товар добавлен в корзину */
 	'basket:add': IProduct;
 	/** Товар удалён из корзины (по id) */

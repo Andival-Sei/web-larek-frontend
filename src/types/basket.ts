@@ -31,8 +31,8 @@ export interface IBasketState {
  * Интерфейс модели корзины, реализующий логику хранения товаров через Map
  */
 export interface IBasketModel {
-	/** Массив id товаров в корзине (каждый товар может быть добавлен несколько раз) */
-	items: string[];
+	/** Map товаров в корзине (id товара -> количество) */
+	items: Map<string, number>;
 	/** Добавить товар в корзину по id */
 	add(id: string): void;
 	/** Удалить товар из корзины по id */
@@ -43,9 +43,8 @@ export interface IBasketModel {
 	getCount(): number;
 	/** Получить общую стоимость товаров */
 	getTotal(): number;
-
-	/** Map товаров в корзине (id товара -> количество) */
-	// items: Map<string, number>; // Как я понял, это не нужно
+	/** Получить список id товаров для отображения */
+	getItems(): string[];
 }
 
 /**

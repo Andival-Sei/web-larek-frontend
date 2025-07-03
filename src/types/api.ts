@@ -6,9 +6,9 @@
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 /**
- * Универсальный тип ответа от API для списков
+ * Универсальный тип ответа от API для списков (каталог товаров)
  */
-export interface IApiResponse<T> {
+export interface IApiListResponse<T> {
 	/** Общее количество элементов */
 	total: number;
 	/** Массив элементов */
@@ -29,5 +29,5 @@ export interface IApiClient {
  * Ошибка API
  */
 export interface IApiError {
-    error: string;
+	error: string;
 }
