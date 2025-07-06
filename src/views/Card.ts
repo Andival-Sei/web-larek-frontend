@@ -23,12 +23,23 @@ export class Card extends Component<ICard> {
 			container.querySelector(settings.card.button) ||
 			container.querySelector(settings.card.deleteButton);
 
+		// Универсальный обработчик: слушаем клики на всём контейнере
 		if (actions?.onClick) {
-			if (this._button) {
-				this._button.addEventListener('click', actions.onClick);
-			} else {
-				container.addEventListener('click', actions.onClick);
-			}
+			container.addEventListener('click', (event: MouseEvent) => {
+				// Если у карточки есть собственная кнопка, реагируем только на клики по ней
+				if (this._button) {
+					if (
+						event.target === this._button ||
+						(this._button.contains(event.target as Node) &&
+							event.currentTarget !== this._button)
+					) {
+						actions.onClick(event);
+					}
+				} else {
+					// Если кнопки нет, достаточно клика по любой области карточки
+					actions.onClick(event);
+				}
+			});
 		}
 	}
 
