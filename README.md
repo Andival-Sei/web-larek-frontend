@@ -12,7 +12,7 @@
 | Сборка | **Webpack 5**, `ts-loader`, `sass-loader` |
 | Стили | **SCSS** + **PostCSS** (`autoprefixer`) |
 | UI | HTML 5, семантические теги, flex / grid |
-| Линтинг | **ESLint**, **Stylelint**, **Prettier** |
+| Линтинг | **ESLint**, **Prettier** |
 | Тесты (unit) | Jest (будущая доработка) |
 
 Дополнительные пакеты перечислены в `package.json`.
