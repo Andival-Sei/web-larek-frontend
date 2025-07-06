@@ -9,6 +9,8 @@ export class Page extends Component<IPage> {
 	protected _catalog: HTMLElement;
 	protected _wrapper: HTMLElement;
 	protected _basket: HTMLElement;
+	private _scrollY = 0;
+	private _isLocked = false;
 
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
@@ -41,6 +43,19 @@ export class Page extends Component<IPage> {
 	 * Заблокировать/разблокировать прокрутку страницы
 	 */
 	set locked(value: boolean) {
-		this.toggleClass(this._wrapper, 'page__wrapper_locked', value);
+		if (value && !this._isLocked) {
+			// Сохраняем текущий скролл и «замораживаем» позицию
+			this._scrollY = window.scrollY;
+			this._wrapper.style.top = `-${this._scrollY}px`;
+			this.toggleClass(this._wrapper, 'page__wrapper_locked', true);
+			this._isLocked = true;
+		} else if (!value && this._isLocked) {
+			// Восстанавливаем позицию
+			const storedOffset = parseInt(this._wrapper.style.top || '0', 10);
+			this._wrapper.style.removeProperty('top');
+			this.toggleClass(this._wrapper, 'page__wrapper_locked', false);
+			window.scrollTo(0, -storedOffset || this._scrollY);
+			this._isLocked = false;
+		}
 	}
 }
