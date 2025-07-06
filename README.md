@@ -95,7 +95,7 @@ npm run build
 | `IOrderForm` / `IContactsForm` | Данные шагов заказа |
 | `IAppEvents` | Список всех внутренних событий приложения |
 
-Файл `tsconfig.json` собран с включёнными флагами `noImplicitAny` и `strictNullChecks`, что исключает появление неявных `any`.
+Файл `tsconfig.json` собирается с флагом `noImplicitAny`, что исключает появление неявных `any`.
 
 ---
 
