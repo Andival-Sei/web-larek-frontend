@@ -2,7 +2,7 @@ import './scss/styles.scss';
 
 import { EventEmitter } from './components/base/events';
 import { WebLarekAPI } from './components/api/WebLarekAPI';
-import { API_URL, CDN_URL } from './utils/constants';
+import { API_URL, CDN_URL, settings } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
 // Модели данных
@@ -27,13 +27,27 @@ const events = new EventEmitter();
 const api = new WebLarekAPI(CDN_URL, API_URL);
 
 // Шаблоны
-const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
-const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
-const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
-const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
-const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
-const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
-const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+const cardCatalogTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.cardCatalog
+);
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.cardPreview
+);
+const cardBasketTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.cardBasket
+);
+const basketTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.basket
+);
+const orderTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.order
+);
+const contactsTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.contacts
+);
+const successTemplate = ensureElement<HTMLTemplateElement>(
+	settings.templates.success
+);
 
 // Модели данных
 const catalogModel = new CatalogModel({}, events);
@@ -42,7 +56,10 @@ const orderModel = new OrderModel({}, events);
 
 // Глобальные компоненты
 const page = new Page(document.body, events);
-const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
+const modal = new Modal(
+	ensureElement<HTMLElement>(settings.modal.container),
+	events
+);
 
 // Переиспользуемые части интерфейса
 const basket = new Basket(cloneTemplate(basketTemplate), events);
@@ -141,7 +158,7 @@ events.on('basket:changed', () => {
 		});
 
 		// Устанавливаем индекс товара в корзине
-		const indexElement = element.querySelector('.basket__item-index');
+		const indexElement = element.querySelector(settings.card.index);
 		if (indexElement) {
 			indexElement.textContent = String(index + 1);
 		}
@@ -155,6 +172,7 @@ events.on('basket:changed', () => {
 
 // Открыть корзину
 events.on('basket:open', () => {
+	basket.buttonDisabled = basketModel.getCount() === 0;
 	modal.render({
 		content: basket.render(),
 	});

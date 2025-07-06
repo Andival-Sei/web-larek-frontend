@@ -2,6 +2,7 @@ import { Component } from '../components/base/Component';
 import { IEvents } from '../components/base/events';
 import { IForm } from '../types';
 import { ensureElement } from '../utils/utils';
+import { settings } from '../utils/constants';
 
 export class Form<T> extends Component<IForm> {
 	protected _submit: HTMLButtonElement;
@@ -11,10 +12,13 @@ export class Form<T> extends Component<IForm> {
 		super(container);
 
 		this._submit = ensureElement<HTMLButtonElement>(
-			'button[type=submit]',
+			settings.form.submit,
 			this.container
 		);
-		this._errors = ensureElement<HTMLElement>('.form__errors', this.container);
+		this._errors = ensureElement<HTMLElement>(
+			settings.form.errors,
+			this.container
+		);
 
 		this.container.addEventListener('input', (e: Event) => {
 			const target = e.target as HTMLInputElement;

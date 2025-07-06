@@ -1,6 +1,7 @@
 import { Component } from '../components/base/Component';
 import { CategoryType, ICard, ICardActions } from '../types';
 import { ensureElement } from '../utils/utils';
+import { settings } from '../utils/constants';
 
 export class Card extends Component<ICard> {
 	protected _title: HTMLElement;
@@ -10,17 +11,17 @@ export class Card extends Component<ICard> {
 	protected _description?: HTMLElement;
 	protected _button?: HTMLButtonElement;
 
-	constructor(container: HTMLElement, actions?: ICardActions) {
+	constructor(container: HTMLElement, protected actions?: ICardActions) {
 		super(container);
 
-		this._title = ensureElement<HTMLElement>('.card__title', container);
-		this._image = container.querySelector('.card__image');
-		this._price = ensureElement<HTMLElement>('.card__price', container);
-		this._category = container.querySelector('.card__category');
-		this._description = container.querySelector('.card__text');
+		this._title = ensureElement<HTMLElement>(settings.card.title, container);
+		this._image = container.querySelector(settings.card.image);
+		this._price = ensureElement<HTMLElement>(settings.card.price, container);
+		this._category = container.querySelector(settings.card.category);
+		this._description = container.querySelector(settings.card.description);
 		this._button =
-			container.querySelector('.card__button') ||
-			container.querySelector('.basket__item-delete');
+			container.querySelector(settings.card.button) ||
+			container.querySelector(settings.card.deleteButton);
 
 		if (actions?.onClick) {
 			if (this._button) {

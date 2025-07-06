@@ -2,6 +2,7 @@ import { Component } from '../components/base/Component';
 import { createElement, ensureElement } from '../utils/utils';
 import { IEvents } from '../components/base/events';
 import { IBasketView } from '../types';
+import { settings } from '../utils/constants';
 
 export class Basket extends Component<IBasketView> {
 	protected _list: HTMLElement;
@@ -11,20 +12,21 @@ export class Basket extends Component<IBasketView> {
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
 
-		this._list = ensureElement<HTMLElement>('.basket__list', container);
-		this._total = ensureElement<HTMLElement>('.basket__price', container);
+		this._list = ensureElement<HTMLElement>(settings.basket.list, container);
+		this._total = ensureElement<HTMLElement>(settings.basket.price, container);
 		this._button = ensureElement<HTMLButtonElement>(
-			'.basket__button',
+			settings.basket.button,
 			container
 		);
 
 		if (this._button) {
 			this._button.addEventListener('click', () => {
-				events.emit('order:open');
+				this.events.emit('order:open');
 			});
 		}
 
 		this.items = [];
+		this.buttonDisabled = true;
 	}
 
 	/**
