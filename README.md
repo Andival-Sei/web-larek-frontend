@@ -13,7 +13,6 @@
 | Стили | **SCSS** + **PostCSS** (`autoprefixer`) |
 | UI | HTML 5, семантические теги, flex / grid |
 | Линтинг | **ESLint**, **Prettier** |
-| Тесты (unit) | Jest (будущая доработка) |
 
 Дополнительные пакеты перечислены в `package.json`.
 
