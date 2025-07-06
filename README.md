@@ -26,7 +26,7 @@
 npm i
 ```
 
-2. Создайте файл окружения `.env` в корне проекта
+2. Создайте файл окружения `.env` в корне проекта с содержимым:
 
 ```dotenv
 API_ORIGIN=https://larek-api.nomoreparties.co
