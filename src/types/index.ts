@@ -29,7 +29,7 @@ export interface IProductList {
 
 // Данные формы заказа (первый шаг)
 export interface IOrderForm {
-	payment: PaymentMethod;
+	payment: PaymentMethod | null;
 	address: string;
 }
 

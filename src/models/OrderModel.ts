@@ -11,7 +11,7 @@ import { IEvents } from '../components/base/events';
 
 export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	order: IOrder = {
-		payment: null as PaymentMethod,
+		payment: null,
 		address: '',
 		email: '',
 		phone: '',
@@ -95,7 +95,7 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	 */
 	clearOrder(): void {
 		this.order = {
-			payment: null as PaymentMethod,
+			payment: null,
 			address: '',
 			email: '',
 			phone: '',
