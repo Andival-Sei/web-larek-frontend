@@ -21,7 +21,11 @@ export class Modal extends Component<IModalData> implements IModal {
 		);
 
 		this._closeButton.addEventListener('click', this.close.bind(this));
-		this.container.addEventListener('click', this.close.bind(this));
+		this.container.addEventListener('click', (event: MouseEvent) => {
+			if (event.target === this.container) {
+				this.close();
+			}
+		});
 		this._content.addEventListener('click', (event) => event.stopPropagation());
 	}
 
