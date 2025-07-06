@@ -69,8 +69,8 @@ const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events);
 // Дальше запишем обработчики событий
 
 // Изменения элементов каталога
-events.on('items:changed', () => {
-	page.catalog = catalogModel.items.map((item) => {
+events.on('items:changed', (items: IProduct[]) => {
+	page.catalog = items.map((item) => {
 		const card = new Card(cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
 		});

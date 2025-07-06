@@ -19,7 +19,7 @@ export class CatalogModel
 	 */
 	setItems(items: IProduct[]): void {
 		this.items = items;
-		this.emitChanges('items:changed', { catalog: this.items });
+		this.emitChanges('items:changed', this.items);
 	}
 
 	/**
