@@ -1,48 +1,60 @@
-import type { IProduct } from './product';
-import type { IBasketState } from './basket';
-import type { IOrder } from './order';
-import type { IView } from './common';
+import type { CategoryType } from './product';
 
-/**
- * Интерфейс для карточки товара
- */
-export interface IProductCardView extends IView {
-	/** Рендерит карточку товара */
-	render(data: { product: IProduct; inBasket: boolean }): HTMLElement;
+// Базовый UI-компонент
+export interface IComponent<T> {
+	render(data?: T): HTMLElement;
 }
 
-/**
- * Интерфейс для модального окна товара
- */
-export interface IProductModalView extends IView {
-	/** Рендерит модальное окно с деталями товара */
-	render(data: { product: IProduct; inBasket: boolean }): HTMLElement;
+// Модальное окно
+export interface IModalData {
+	content: HTMLElement;
 }
 
-/**
- * Интерфейс для корзины
- */
-export interface IBasketView extends IView {
-	/** Рендерит корзину */
-	render(data: IBasketState): HTMLElement;
+export interface IModal {
+	content: HTMLElement;
+	open(): void;
+	close(): void;
+	render(data: IModalData): HTMLElement;
 }
 
-/**
- * Интерфейс для формы заказа
- */
-export interface IOrderFormView extends IView {
-	/** Рендерит форму заказа */
-	render(data: { step: 1 | 2; order?: Partial<IOrder> }): HTMLElement;
+// Главная страница
+export interface IPage {
+	counter: number;
+	catalog: HTMLElement[];
+	locked: boolean;
 }
 
-/**
- * Интерфейс для модального окна
- */
-export interface IModalView extends IView {
-	/** Рендерит модальное окно */
-	render(data: {
-		id: string;
-		content: HTMLElement;
-		title?: string;
-	}): HTMLElement;
+// Карточка товара
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+export interface ICard {
+	id: string;
+	title: string;
+	image?: string;
+	price: number | null;
+	category?: CategoryType;
+	description?: string;
+	button?: string;
+}
+
+// Карточка товара в корзине
+export interface IBasketCardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+// Любая HTML-форма
+export interface IForm {
+	valid: boolean;
+	errors: string[];
+}
+
+// Окно «Заказ оформлен»
+export interface ISuccess {
+	total: number;
+}
+
+export interface ISuccessActions {
+	onClick: () => void;
 }

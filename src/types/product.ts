@@ -1,52 +1,35 @@
-// Типы и интерфейсы для товаров
+// Типы, относящиеся к товару
 
-import { IEventEmitter } from "./common";
-
-/**
- * Категории товаров, поддерживаемые в магазине
- */
-export type ProductCategory =
+// Категории товаров
+export type CategoryType =
 	| 'софт-скил'
-	| 'хард-скил'
 	| 'другое'
 	| 'дополнительное'
-	| 'кнопка';
+	| 'кнопка'
+	| 'хард-скил';
 
-/**
- * Интерфейс описывает структуру товара, получаемого с сервера
- */
+// Описание товара, приходящего из API
 export interface IProduct {
-	/** Уникальный идентификатор товара */
 	id: string;
-	/** Название товара */
-	title: string;
-	/** Описание товара */
 	description: string;
-	/** Цена товара в синапсах */
-	price: number | null;
-	/** Категория товара */
-	category: ProductCategory;
-	/** Ссылка на изображение товара */
 	image: string;
+	title: string;
+	category: CategoryType;
+	price: number | null;
 }
 
-/**
- * Интерфейс модели каталога товаров
- */
-export interface ICatalogModel {
-	/** Список товаров в каталоге */
+// Ответ API cо списком товаров
+export interface IProductList {
+	total: number;
 	items: IProduct[];
-	/** Установить список товаров (после загрузки из API) */
-	setItems(items: IProduct[]): void;
-	/** Получить товар по ID */
-	getProduct(id: string): IProduct | undefined;
-	/** Получить все товары */
-	getAllProducts(): IProduct[];
 }
 
-/**
- * Интерфейс конструктора модели каталога
- */
-export interface ICatalogModelConstructor {
-	new (events: IEventEmitter): ICatalogModel;
+// Модель каталога товаров (business-logic layer)
+export interface ICatalogModel {
+	items: IProduct[];
+	preview: string | null;
+	loading: boolean;
+	setItems(items: IProduct[]): void;
+	getProduct(id: string): IProduct | undefined;
+	setPreview(product: IProduct): void;
 }

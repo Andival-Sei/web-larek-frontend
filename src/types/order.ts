@@ -1,81 +1,41 @@
-// Типы и интерфейсы для заказа
-import type { IBasketItem } from './basket';
-import type { IEventEmitter } from './common';
+// Типы, относящиеся к оформлению заказа
 
-/**
- * Возможные способы оплаты заказа
- */
-export type PaymentMethod = 'online' | 'cash';
+export type PaymentMethod = 'cash' | 'online';
 
-/**
- * Контактная информация покупателя
- */
-export interface IContactInfo {
-	/** Email покупателя */
-	email: string;
-	/** Телефон покупателя */
-	phone: string;
-}
-
-/**
- * Информация о доставке заказа
- */
-export interface IDeliveryInfo {
-	/** Адрес доставки */
+// Шаг 1: информация о доставке
+export interface IOrderForm {
+	payment: PaymentMethod | null;
 	address: string;
-	/** Способ оплаты */
-	payment: PaymentMethod;
 }
 
-/**
- * Полная информация о заказе
- */
-export interface IOrder {
-	/** Список товаров в заказе */
-	items: IBasketItem[];
-	/** Общая стоимость заказа */
-	total: number;
-	/** Данные о доставке */
-	delivery: IDeliveryInfo;
-	/** Контактные данные покупателя */
-	contacts: IContactInfo;
-}
-
-/**
- * Запрос на создание заказа (как отправляется на сервер)
- */
-export interface IOrderRequest {
-	payment: PaymentMethod;
+// Шаг 2: контактные данные
+export interface IContactsForm {
 	email: string;
 	phone: string;
-	address: string;
-	total: number;
-	items: string[]; // массив ID товаров
 }
 
-/**
- * Ответ сервера на создание заказа
- */
-export interface IOrderResponse {
+// Полная структура заказа, отправляемая на сервер
+export interface IOrder extends IOrderForm, IContactsForm {
+	total: number;
+	items: string[]; // массив id товаров
+}
+
+// Ответ сервера о созданном заказе
+export interface IOrderResult {
 	id: string;
 	total: number;
 }
 
-/**
- * Интерфейс модели заказа
- */
-export interface IOrderModel {
-	/** Создать заказ */
-	createOrder(orderData: IOrderRequest): Promise<IOrderResponse>;
-	/** Получить текущий заказ */
-	getCurrentOrder(): IOrder | null;
-	/** Очистить текущий заказ */
-	clearOrder(): void;
-}
+// Ошибки формы (key -> сообщение)
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
-/**
- * Интерфейс конструктора модели заказа
- */
-export interface IOrderModelConstructor {
-	new (events: IEventEmitter): IOrderModel;
+// Интерфейс модели заказа (business-logic layer)
+export interface IOrderModel {
+	order: IOrder;
+	formErrors: FormErrors;
+	setOrderField(field: keyof IOrderForm, value: string): void;
+	setContactsField(field: keyof IContactsForm, value: string): void;
+	validateOrder(): boolean;
+	validateContacts(): boolean;
+	clearOrder(): void;
 }
