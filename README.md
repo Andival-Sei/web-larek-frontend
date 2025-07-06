@@ -151,4 +151,10 @@ src/
 
 ---
 
+## 7. Размещение в сети
+
+Рабочая версия проекта доступна по ссылке: [https://web-larek-frontend-xi.vercel.app/](https://web-larek-frontend-xi.vercel.app/)
+
+---
+
 Проект выполнен в рамках курса **«TypeScript и ООП» (Яндекс Практикум)**.
