@@ -53,8 +53,8 @@ export class Form<T> extends Component<IForm> {
 	/**
 	 * Установить ошибки валидации
 	 */
-	set errors(value: string) {
-		this.setText(this._errors, value);
+	set errors(list: string[]) {
+		this.setText(this._errors, list.join('; '));
 	}
 
 	/**

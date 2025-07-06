@@ -62,7 +62,6 @@ export interface IBasketItem {
 export interface IBasketView {
 	items: HTMLElement[];
 	total: number;
-	selected: string[];
 }
 
 // Ошибки формы
@@ -154,11 +153,6 @@ export interface IForm {
 	errors: string[];
 }
 
-export interface IFormState {
-	valid: boolean;
-	errors: FormErrors;
-}
-
 export interface ISuccess {
 	total: number;
 }
@@ -187,6 +181,8 @@ export interface IAppEvents {
 	'modal:open': void;
 	'modal:close': void;
 	'order:success': IOrderResult;
+	'order:ready': IOrder;
+	'contacts:ready': IOrder;
 }
 
 export * from './product';
@@ -196,4 +192,3 @@ export * from './events';
 export * from './api';
 export * from './common';
 export * from './views';
-

@@ -196,13 +196,13 @@ events.on(
 	(errors: Partial<IOrderForm & IContactsForm>) => {
 		const { payment, address, email, phone } = errors;
 		orderForm.valid = !payment && !address;
-		orderForm.errors = Object.values({ payment, address })
-			.filter((i) => !!i)
-			.join('; ');
+		orderForm.errors = Object.values({ payment, address }).filter(
+			(i): i is string => Boolean(i)
+		);
 		contactsForm.valid = !email && !phone;
-		contactsForm.errors = Object.values({ phone, email })
-			.filter((i) => !!i)
-			.join('; ');
+		contactsForm.errors = Object.values({ phone, email }).filter(
+			(i): i is string => Boolean(i)
+		);
 	}
 );
 
