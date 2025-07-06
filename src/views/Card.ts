@@ -124,14 +124,22 @@ export class Card extends Component<ICard> {
 	 * Установить описание
 	 */
 	set description(value: string | string[]) {
+		// _description может отсутствовать в некоторых шаблонах
+		if (!this._description) return;
+
 		if (Array.isArray(value)) {
-			this._description.replaceWith(
-				...value.map((str) => {
-					const descriptionItem = this._description.cloneNode() as HTMLElement;
-					this.setText(descriptionItem, str);
-					return descriptionItem;
-				})
-			);
+			// создаём новые узлы на основе оригинального элемента
+			const newItems = value.map((str) => {
+				const node = this._description.cloneNode() as HTMLElement;
+				this.setText(node, str);
+				return node;
+			});
+
+			// Заменяем старый элемент на полученный список и
+			// сохраняем ссылку на первый, чтобы при следующем вызове
+			// _description указывал на актуальный узел в DOM
+			this._description.replaceWith(...newItems);
+			this._description = newItems[0];
 		} else {
 			this.setText(this._description, value);
 		}
