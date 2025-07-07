@@ -3,7 +3,8 @@ import { IBasketModel, IBasketItem, IProduct } from '../types';
 import { IEvents } from '../components/base/events';
 
 export class BasketModel extends Model<IBasketModel> implements IBasketModel {
-	items: Map<string, IBasketItem> = new Map();
+	// внутреннее хранилище корзины – не доступно извне
+	private _items: Map<string, IBasketItem> = new Map();
 
 	constructor(data: Partial<IBasketModel>, events: IEvents) {
 		super(data, events);
@@ -17,7 +18,7 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 			return; // Товары без цены нельзя добавлять в корзину
 		}
 
-		this.items.set(product.id, {
+		this._items.set(product.id, {
 			id: product.id,
 			title: product.title,
 			price: product.price,
@@ -29,7 +30,7 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	 * Удалить товар из корзины
 	 */
 	remove(id: string): void {
-		this.items.delete(id);
+		this._items.delete(id);
 		this.emitChanges('basket:changed', this.getItems());
 	}
 
@@ -37,7 +38,7 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	 * Очистить корзину
 	 */
 	clear(): void {
-		this.items.clear();
+		this._items.clear();
 		this.emitChanges('basket:changed', this.getItems());
 	}
 
@@ -45,7 +46,7 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	 * Получить общую стоимость товаров в корзине
 	 */
 	getTotal(): number {
-		return Array.from(this.items.values()).reduce(
+		return Array.from(this._items.values()).reduce(
 			(total, item) => total + item.price,
 			0
 		);
@@ -55,27 +56,27 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	 * Получить количество товаров в корзине
 	 */
 	getCount(): number {
-		return this.items.size;
+		return this._items.size;
 	}
 
 	/**
 	 * Проверить, содержится ли товар в корзине
 	 */
 	contains(id: string): boolean {
-		return this.items.has(id);
+		return this._items.has(id);
 	}
 
 	/**
 	 * Получить все товары в корзине
 	 */
 	getItems(): IBasketItem[] {
-		return Array.from(this.items.values());
+		return Array.from(this._items.values());
 	}
 
 	/**
 	 * Получить список ID товаров в корзине
 	 */
 	getItemIds(): string[] {
-		return Array.from(this.items.keys());
+		return Array.from(this._items.keys());
 	}
 }

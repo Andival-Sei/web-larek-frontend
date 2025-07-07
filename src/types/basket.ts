@@ -11,7 +11,6 @@ export interface IBasketView {
 
 // Интерфейс модели корзины
 export interface IBasketModel {
-	items: Map<string, IBasketItem>;
 	add(product: IProduct): void;
 	remove(id: string): void;
 	clear(): void;

@@ -26,10 +26,9 @@ export interface IProductList {
 
 // Модель каталога товаров (business-logic layer)
 export interface ICatalogModel {
-	items: IProduct[];
-	preview: string | null;
-	loading: boolean;
 	setItems(items: IProduct[]): void;
 	getProduct(id: string): IProduct | undefined;
 	setPreview(product: IProduct): void;
+	getPreview(): IProduct | null;
+	isLoading(): boolean;
 }
