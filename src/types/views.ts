@@ -1,4 +1,4 @@
-import type { CategoryType } from './product';
+import type { CategoryType, IProduct } from './product';
 
 // Базовый UI-компонент
 export interface IComponent<T> {
@@ -29,15 +29,12 @@ export interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
 
-export interface ICard {
-	id: string;
-	title: string;
-	image?: string;
-	price: number | null;
-	category?: CategoryType;
-	description?: string;
-	button?: string;
-}
+// Данные, требуемые карточке: большинство полей берём из IProduct,
+// добавляя специфическое для UI поле `button`.
+export type ICard = Pick<IProduct, 'id' | 'title' | 'price'> &
+	Partial<Pick<IProduct, 'image' | 'category' | 'description'>> & {
+		button?: string;
+	};
 
 // Карточка товара в корзине
 export interface IBasketCardActions {

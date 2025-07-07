@@ -1,11 +1,7 @@
 import type { IProduct } from './product';
 
-// Элемент корзины (храним упрощённые данные, нужные для отображения)
-export interface IBasketItem {
-	id: string;
-	title: string;
-	price: number;
-}
+// Элемент корзины – нужные для отображения поля товара
+export type IBasketItem = Pick<IProduct, 'id' | 'title' | 'price'>;
 
 // Структура данных, которую ожидает view корзины
 export interface IBasketView {
