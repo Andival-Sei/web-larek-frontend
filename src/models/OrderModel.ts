@@ -98,13 +98,6 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 
 		if (!this._orderForm.phone) {
 			errors.phone = 'Необходимо указать телефон';
-		} else {
-			// Базовая проверка формата: +7 или 8 и 10 цифр с возможными пробелами/дефисами
-			const phoneReg =
-				/^((\+7|8)[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-			if (!phoneReg.test(this._orderForm.phone)) {
-				errors.phone = 'Некорректный формат телефона';
-			}
 		}
 
 		this.formErrors = errors;
