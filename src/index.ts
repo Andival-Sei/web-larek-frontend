@@ -52,7 +52,7 @@ const successTemplate = ensureElement<HTMLTemplateElement>(
 // Модели данных
 const catalogModel = new CatalogModel({}, events);
 const basketModel = new BasketModel({}, events);
-const orderModel = new OrderModel({}, events);
+const orderModel = new OrderModel({}, events, basketModel);
 
 // Глобальные компоненты
 const page = new Page(document.body, events);
@@ -235,7 +235,6 @@ events.on('order:submit', () => {
 
 // Отправлена форма контактов
 events.on('contacts:submit', () => {
-	orderModel.setOrderData(basketModel.getItemIds(), basketModel.getTotal());
 	api
 		.createOrder(orderModel.getOrderData())
 		.then((result) => {

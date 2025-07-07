@@ -6,22 +6,37 @@ import {
 	IOrderForm,
 	IOrderModel,
 	PaymentMethod,
+	IBasketModel,
 } from '../types';
 import { IEvents } from '../components/base/events';
 
 export class OrderModel extends Model<IOrderModel> implements IOrderModel {
-	order: IOrder = {
+	// Поля, вводимые пользователем в различных формах (без total / items)
+	private _orderForm: IOrderForm & IContactsForm = {
 		payment: null,
 		address: '',
 		email: '',
 		phone: '',
-		total: 0,
-		items: [],
 	};
+
 	formErrors: FormErrors = {};
 
-	constructor(data: Partial<IOrderModel>, events: IEvents) {
+	constructor(
+		data: Partial<IOrderModel>,
+		events: IEvents,
+		private basketModel: IBasketModel
+	) {
 		super(data, events);
+	}
+
+	// Актуальное состояние заказа. Сумма и список товаров рассчитываются
+	// на основе BasketModel при каждом обращении.
+	get order(): IOrder {
+		return {
+			...this._orderForm,
+			total: this.basketModel.getTotal(),
+			items: this.basketModel.getItems().map((i) => i.id),
+		};
 	}
 
 	/**
@@ -29,9 +44,9 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	 */
 	setOrderField(field: keyof IOrderForm, value: string): void {
 		if (field === 'payment') {
-			this.order[field] = value as PaymentMethod;
+			this._orderForm[field] = value as PaymentMethod;
 		} else {
-			this.order[field] = value;
+			this._orderForm[field] = value;
 		}
 
 		if (this.validateOrder()) {
@@ -43,7 +58,7 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	 * Установить поле формы контактов
 	 */
 	setContactsField(field: keyof IContactsForm, value: string): void {
-		this.order[field] = value;
+		this._orderForm[field] = value;
 
 		if (this.validateContacts()) {
 			this.events.emit('contacts:ready', this.order);
@@ -56,11 +71,11 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	validateOrder(): boolean {
 		const errors: typeof this.formErrors = {};
 
-		if (!this.order.payment) {
+		if (!this._orderForm.payment) {
 			errors.payment = 'Необходимо указать способ оплаты';
 		}
 
-		if (!this.order.address) {
+		if (!this._orderForm.address) {
 			errors.address = 'Необходимо указать адрес';
 		}
 
@@ -75,19 +90,19 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	validateContacts(): boolean {
 		const errors: typeof this.formErrors = {};
 
-		if (!this.order.email) {
+		if (!this._orderForm.email) {
 			errors.email = 'Необходимо указать email';
-		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.order.email)) {
+		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this._orderForm.email)) {
 			errors.email = 'Некорректный формат email';
 		}
 
-		if (!this.order.phone) {
+		if (!this._orderForm.phone) {
 			errors.phone = 'Необходимо указать телефон';
 		} else {
 			// Базовая проверка формата: +7 или 8 и 10 цифр с возможными пробелами/дефисами
 			const phoneReg =
 				/^((\+7|8)[\s-]?)?\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-			if (!phoneReg.test(this.order.phone)) {
+			if (!phoneReg.test(this._orderForm.phone)) {
 				errors.phone = 'Некорректный формат телефона';
 			}
 		}
@@ -101,30 +116,21 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	 * Очистить заказ
 	 */
 	clearOrder(): void {
-		this.order = {
+		this._orderForm = {
 			payment: null,
 			address: '',
 			email: '',
 			phone: '',
-			total: 0,
-			items: [],
 		};
 		this.formErrors = {};
 		this.events.emit('order:clear', this.order);
 	}
 
 	/**
-	 * Установить товары и общую стоимость заказа
-	 */
-	setOrderData(items: string[], total: number): void {
-		this.order.items = items;
-		this.order.total = total;
-	}
-
-	/**
-	 * Получить заказ для отправки на сервер
+	 * Получить заказ для отправки на сервер. Сумма и список товаров
+	 * формируются динамически из модели корзины.
 	 */
 	getOrderData(): IOrder {
-		return { ...this.order };
+		return this.order; // геттер вернёт актуальное состояние
 	}
 }
