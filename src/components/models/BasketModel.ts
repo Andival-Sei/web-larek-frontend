@@ -1,6 +1,6 @@
-import { Model } from '../components/base/Model';
-import { IBasketModel, IBasketItem, IProduct } from '../types';
-import { IEvents } from '../components/base/events';
+import { Model } from '../base/Model';
+import { IBasketModel, IBasketItem, IProduct } from '../../types';
+import { IEvents } from '../base/events';
 
 export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	// внутреннее хранилище корзины – не доступно извне

@@ -1,6 +1,6 @@
-import { Model } from '../components/base/Model';
-import { ICatalogModel, IProduct } from '../types';
-import { IEvents } from '../components/base/events';
+import { Model } from '../base/Model';
+import { ICatalogModel, IProduct } from '../../types';
+import { IEvents } from '../base/events';
 
 export class CatalogModel
 	extends Model<ICatalogModel>

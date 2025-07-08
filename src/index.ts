@@ -6,18 +6,18 @@ import { API_URL, CDN_URL, settings } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
 // Модели данных
-import { CatalogModel } from './models/CatalogModel';
-import { BasketModel } from './models/BasketModel';
-import { OrderModel } from './models/OrderModel';
+import { CatalogModel } from './components/models/CatalogModel';
+import { BasketModel } from './components/models/BasketModel';
+import { OrderModel } from './components/models/OrderModel';
 
 // Компоненты отображения
-import { Page } from './views/Page';
-import { Modal } from './views/Modal';
-import { Card } from './views/Card';
-import { Basket } from './views/Basket';
-import { OrderForm } from './views/OrderForm';
-import { ContactsForm } from './views/ContactsForm';
-import { Success } from './views/Success';
+import { Page } from './components/views/Page';
+import { Modal } from './components/views/Modal';
+import { Card } from './components/views/Card';
+import { Basket } from './components/views/Basket';
+import { OrderForm } from './components/views/OrderForm';
+import { ContactsForm } from './components/views/ContactsForm';
+import { Success } from './components/views/Success';
 
 // Типы
 import { IProduct, IContactsForm, IOrderForm } from './types';

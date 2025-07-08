@@ -1,8 +1,8 @@
-import { Component } from '../components/base/Component';
-import { IModal, IModalData } from '../types';
-import { IEvents } from '../components/base/events';
-import { ensureElement } from '../utils/utils';
-import { settings } from '../utils/constants';
+import { Component } from '../base/Component';
+import { IModal, IModalData } from '../../types';
+import { IEvents } from '../base/events';
+import { ensureElement } from '../../utils/utils';
+import { settings } from '../../utils/constants';
 
 export class Modal extends Component<IModalData> implements IModal {
 	protected _closeButton: HTMLButtonElement;
@@ -61,4 +61,4 @@ export class Modal extends Component<IModalData> implements IModal {
 		this.open();
 		return this.container;
 	}
-}
+} 

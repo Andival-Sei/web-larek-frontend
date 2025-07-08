@@ -1,4 +1,4 @@
-import { Model } from '../components/base/Model';
+import { Model } from '../base/Model';
 import {
 	FormErrors,
 	IContactsForm,
@@ -7,8 +7,8 @@ import {
 	IOrderModel,
 	PaymentMethod,
 	IBasketModel,
-} from '../types';
-import { IEvents } from '../components/base/events';
+} from '../../types';
+import { IEvents } from '../base/events';
 
 export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	// Поля, вводимые пользователем в различных формах (без total / items)
@@ -112,4 +112,4 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	getOrderData(): IOrder {
 		return this.order; // геттер вернёт актуальное состояние
 	}
-}
+} 

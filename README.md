@@ -139,14 +139,14 @@ npm run build
 
 | Компонент | Файл | Функция |
 |-----------|------|---------|
-| `Card` | `src/views/Card.ts` | Карточка товара. Отображает инфо, выводит кнопку «Купить» / «Убрать». |
-| `Basket` | `src/views/Basket.ts` | Список товаров в корзине + сумма + кнопка «Оформить». |
-| `Modal` | `src/views/Modal.ts` | Универсальное модальное окно с анимацией и оверлеем. Закрывается по Esc, крестику, оверлею. |
-| `Form` (базовый) | `src/views/Form.ts` | Общая логика форм: сбор данных, валидация, блокировка кнопок. |
-| `OrderForm` | `src/views/OrderForm.ts` | Шаг 1: выбор оплаты + ввод адреса. |
-| `ContactsForm` | `src/views/ContactsForm.ts` | Шаг 2: почта + телефон. |
-| `Success` | `src/views/Success.ts` | Модалка успешной покупки. |
-| `Page` | `src/views/Page.ts` | Шапка + основной контейнер. Отображает счётчик корзины. |
+| `Card` | `src/components/views/Card.ts` | Карточка товара. Отображает инфо, выводит кнопку «Купить» / «Убрать». |
+| `Basket` | `src/components/views/Basket.ts` | Список товаров в корзине + сумма + кнопка «Оформить». |
+| `Modal` | `src/components/views/Modal.ts` | Универсальное модальное окно с анимацией и оверлеем. Закрывается по Esc, крестику, оверлею. |
+| `Form` (базовый) | `src/components/views/Form.ts` | Общая логика форм: сбор данных, валидация, блокировка кнопок. |
+| `OrderForm` | `src/components/views/OrderForm.ts` | Шаг 1: выбор оплаты + ввод адреса. |
+| `ContactsForm` | `src/components/views/ContactsForm.ts` | Шаг 2: почта + телефон. |
+| `Success` | `src/components/views/Success.ts` | Модалка успешной покупки. |
+| `Page` | `src/components/views/Page.ts` | Шапка + основной контейнер. Отображает счётчик корзины. |
 
 #### 3.3.1 Card — карточка товара
 
@@ -271,9 +271,10 @@ npm run build
 ```
 src/
 ├── components/            # базовые абстракции и api-клиент
-│   └── base/              # Component, Model, events
-├── models/                # бизнес-логика
-├── views/                 # UI-компоненты (только отрисовка)
+│   ├── base/              # Component, Model, events
+│   ├── api/               # WebLarekAPI
+│   ├── models/            # бизнес-логика
+│   └── views/             # UI-компоненты (только отрисовка)
 ├── types/                 # декларации TS-типов
 ├── utils/                 # утилиты и константы
 ├── scss/                  # стили + переменные

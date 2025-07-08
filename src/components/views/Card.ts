@@ -1,7 +1,7 @@
-import { Component } from '../components/base/Component';
-import { CategoryType, ICard, ICardActions } from '../types';
-import { ensureElement } from '../utils/utils';
-import { settings } from '../utils/constants';
+import { Component } from '../base/Component';
+import { CategoryType, ICard, ICardActions } from '../../types';
+import { ensureElement } from '../../utils/utils';
+import { settings } from '../../utils/constants';
 
 export class Card extends Component<ICard> {
 	protected _title: HTMLElement;

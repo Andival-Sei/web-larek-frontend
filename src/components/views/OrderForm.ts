@@ -1,7 +1,7 @@
 import { Form } from './Form';
-import { IOrderForm, PaymentMethod, IForm } from '../types';
-import { IEvents } from '../components/base/events';
-import { ensureAllElements } from '../utils/utils';
+import { IOrderForm, PaymentMethod, IForm } from '../../types';
+import { IEvents } from '../base/events';
+import { ensureAllElements } from '../../utils/utils';
 
 export class OrderForm extends Form<IOrderForm> {
 	protected _paymentButtons: HTMLButtonElement[];
