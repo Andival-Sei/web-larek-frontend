@@ -25,23 +25,9 @@ export class ContactsForm extends Form<IContactsForm> {
 	}
 
 	/**
-	 * Получить email
-	 */
-	get email(): string {
-		return this._emailInput.value;
-	}
-
-	/**
 	 * Установить телефон
 	 */
 	set phone(value: string) {
 		this._phoneInput.value = value;
-	}
-
-	/**
-	 * Получить телефон
-	 */
-	get phone(): string {
-		return this._phoneInput.value;
 	}
 }

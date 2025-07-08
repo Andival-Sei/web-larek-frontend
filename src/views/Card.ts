@@ -51,13 +51,6 @@ export class Card extends Component<ICard> {
 	}
 
 	/**
-	 * Получить ID карточки
-	 */
-	get id(): string {
-		return this.container.dataset.id || '';
-	}
-
-	/**
 	 * Установить заголовок
 	 */
 	set title(value: string) {
@@ -65,17 +58,11 @@ export class Card extends Component<ICard> {
 	}
 
 	/**
-	 * Получить заголовок
-	 */
-	get title(): string {
-		return this._title.textContent || '';
-	}
-
-	/**
 	 * Установить изображение
 	 */
 	set image(value: string) {
-		this.setImage(this._image, value, this.title);
+		const alt = this._title.textContent || '';
+		this.setImage(this._image, value, alt);
 	}
 
 	/**

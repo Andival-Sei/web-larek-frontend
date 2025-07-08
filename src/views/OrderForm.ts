@@ -46,13 +46,6 @@ export class OrderForm extends Form<IOrderForm> {
 	}
 
 	/**
-	 * Получить адрес доставки
-	 */
-	get address(): string {
-		return this._addressInput.value;
-	}
-
-	/**
 	 * Переопределяем render, чтобы при повторном показе формы
 	 * активная кнопка соответствовала состоянию модели
 	 */

@@ -37,13 +37,6 @@ export class Modal extends Component<IModalData> implements IModal {
 	}
 
 	/**
-	 * Получить содержимое модального окна
-	 */
-	get content(): HTMLElement {
-		return this._content;
-	}
-
-	/**
 	 * Открыть модальное окно
 	 */
 	open(): void {
