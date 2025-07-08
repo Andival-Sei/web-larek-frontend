@@ -73,7 +73,7 @@ const success = new Success(cloneTemplate(successTemplate), {
 	},
 });
 
-// Дальше запишем обработчики событий
+// Обработчики событий
 
 // Изменения элементов каталога
 events.on('items:changed', (items: IProduct[]) => {
