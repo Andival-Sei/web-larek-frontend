@@ -225,11 +225,15 @@ events.on(
 		// чтобы не обращаться к данным представления
 		const orderValid =
 			!orderModel.formErrors.payment && !orderModel.formErrors.address;
+		const orderErrors = Object.values({
+			payment: orderModel.formErrors.payment,
+			address: orderModel.formErrors.address,
+		}).filter((e): e is string => Boolean(e));
 		orderForm.render({
 			payment: orderModel.order.payment,
 			address: orderModel.order.address,
 			valid: orderValid,
-			errors: [],
+			errors: orderErrors,
 		});
 	}
 );
