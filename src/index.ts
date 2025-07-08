@@ -78,8 +78,10 @@ const success = new Success(cloneTemplate(successTemplate), {
 // Изменения элементов каталога
 events.on('items:changed', (items: IProduct[]) => {
 	page.catalog = items.map((item) => {
+		// Карточка сама генерирует DOM-событие click, здесь мы просто
+		// реагируем коллбэком и обновляем модель, не создавая новое событие
 		const card = new Card(cloneTemplate(cardCatalogTemplate), {
-			onClick: () => events.emit('card:select', item),
+			onClick: () => catalogModel.setPreview(item),
 		});
 		return card.render({
 			id: item.id,
@@ -91,22 +93,23 @@ events.on('items:changed', (items: IProduct[]) => {
 	});
 });
 
-// Открыть товар
-events.on('card:select', (item: IProduct) => {
-	catalogModel.setPreview(item);
-});
+// События card:* больше не используются, оставляем только basket/model-driven события
 
 // Изменен открытый выбранный товар
 events.on('preview:changed', (item: IProduct) => {
 	const showItem = (item: IProduct) => {
 		const card = new Card(cloneTemplate(cardPreviewTemplate), {
 			onClick: () => {
-				// Если товар уже в корзине — удаляем его, иначе добавляем
 				if (basketModel.contains(item.id)) {
-					events.emit('card:remove', item);
+					// удаляем товар из корзины
+					basketModel.remove(item.id);
 				} else {
-					events.emit('card:add', item);
+					// добавляем товар в корзину
+					basketModel.add(item);
 				}
+
+				// вне зависимости от действия обновляем отображение превью
+				catalogModel.setPreview(item);
 			},
 		});
 
@@ -131,31 +134,22 @@ events.on('preview:changed', (item: IProduct) => {
 	}
 });
 
-// Добавить товар в корзину
-events.on('card:add', (item: IProduct) => {
-	basketModel.add(item);
-	// Обновляем модальное окно если товар сейчас отображается
-	if (catalogModel.getPreview()?.id === item.id) {
-		catalogModel.setPreview(item); // модель сама сгенерирует событие
-	}
-});
-
-// Убрать товар из корзины
-events.on('card:remove', (item: IProduct) => {
-	basketModel.remove(item.id);
-	// При необходимости обновляем превью, чтобы отобразить актуальное состояние кнопки
-	if (catalogModel.getPreview()?.id === item.id) {
-		catalogModel.setPreview(item);
-	}
-});
-
 // Изменения в корзине
 events.on('basket:changed', () => {
 	page.counter = basketModel.getCount();
 	basket.items = basketModel.getItems().map((item, index) => {
 		const card = new Card(cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
-				events.emit('card:remove', item);
+				basketModel.remove(item.id);
+
+				// если в данный момент открыт превью именно этого товара, обновим его
+				const currentPreview = catalogModel.getPreview();
+				if (currentPreview && currentPreview.id === item.id) {
+					const fullProduct = catalogModel.getProduct(item.id);
+					if (fullProduct) {
+						catalogModel.setPreview(fullProduct);
+					}
+				}
 			},
 		});
 		const element = card.render({
