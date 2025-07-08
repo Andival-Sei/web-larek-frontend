@@ -129,7 +129,7 @@ events.on('card:add', (item: IProduct) => {
 	basketModel.add(item);
 	// Обновляем модальное окно если товар сейчас отображается
 	if (catalogModel.getPreview()?.id === item.id) {
-		events.emit('preview:changed', item);
+		catalogModel.setPreview(item); // модель сама сгенерирует событие
 	}
 });
 
