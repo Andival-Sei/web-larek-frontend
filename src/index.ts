@@ -211,6 +211,14 @@ events.on(
 	/^order\..*:change/,
 	(data: { field: keyof IOrderForm; value: string }) => {
 		orderModel.setOrderField(data.field, data.value);
+
+		// Перерисовываем форму, чтобы подсветка способа оплаты обновилась
+		orderForm.render({
+			payment: orderModel.order.payment,
+			address: orderModel.order.address,
+			valid: orderForm.valid,
+			errors: [],
+		});
 	}
 );
 
