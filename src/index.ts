@@ -101,9 +101,9 @@ events.on('preview:changed', (item: IProduct) => {
 	const showItem = (item: IProduct) => {
 		const card = new Card(cloneTemplate(cardPreviewTemplate), {
 			onClick: () => {
+				// Если товар уже в корзине — удаляем его, иначе добавляем
 				if (basketModel.contains(item.id)) {
-					modal.close();
-					events.emit('basket:open');
+					events.emit('card:remove', item);
 				} else {
 					events.emit('card:add', item);
 				}
@@ -118,7 +118,7 @@ events.on('preview:changed', (item: IProduct) => {
 				price: item.price,
 				category: item.category,
 				description: item.description,
-				button: basketModel.contains(item.id) ? 'В корзину' : 'Купить',
+				button: basketModel.contains(item.id) ? 'Удалить из корзины' : 'Купить',
 			}),
 		});
 	};
@@ -143,6 +143,10 @@ events.on('card:add', (item: IProduct) => {
 // Убрать товар из корзины
 events.on('card:remove', (item: IProduct) => {
 	basketModel.remove(item.id);
+	// При необходимости обновляем превью, чтобы отобразить актуальное состояние кнопки
+	if (catalogModel.getPreview()?.id === item.id) {
+		catalogModel.setPreview(item);
+	}
 });
 
 // Изменения в корзине
@@ -233,7 +237,10 @@ events.on(
 events.on(
 	/^contacts\..*:change/,
 	(data: { field: keyof IContactsForm; value: string }) => {
-		orderModel.setField(data.field as keyof (IOrderForm & IContactsForm), data.value);
+		orderModel.setField(
+			data.field as keyof (IOrderForm & IContactsForm),
+			data.value
+		);
 	}
 );
 
