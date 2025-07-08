@@ -72,11 +72,4 @@ export class BasketModel extends Model<IBasketModel> implements IBasketModel {
 	getItems(): IBasketItem[] {
 		return Array.from(this._items.values());
 	}
-
-	/**
-	 * Получить список ID товаров в корзине
-	 */
-	getItemIds(): string[] {
-		return Array.from(this._items.keys());
-	}
 }
