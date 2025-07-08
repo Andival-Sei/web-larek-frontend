@@ -121,7 +121,7 @@ events.on('preview:changed', (item: IProduct) => {
 				price: item.price,
 				category: item.category,
 				description: item.description,
-				button: basketModel.contains(item.id) ? 'Удалить из корзины' : 'Купить',
+				button: basketModel.contains(item.id) ? 'Удалить из корзины' : 'В корзину',
 			}),
 		});
 	};

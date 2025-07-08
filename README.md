@@ -70,7 +70,7 @@ npm run build
 | `EventEmitter` | `src/components/base/events.ts` | Регистрирует/снимает слушателей, рассылает события, передавая полезную нагрузку. |
 | `Model<T>` | `src/components/base/Model.ts` | Абстрактная модель-обёртка поверх данных типа `T`. Предоставляет метод `emitChanges`, автоматически микширует `Partial<T>` в `this`. |
 | `Component<P>` | `src/components/base/Component.ts` | Базовый класс представления: хранит ссылку на DOM-контейнер, умеет устанавливать текст, атрибуты, классы, изображения и реагировать на изм. свойств. |
-| `WebLarekAPI` | `src/components/api/WebLarekAPI.ts` | Инкапсулирует HTTP-запросы (`fetch`). Методы: `getProducts`, `getProduct`, `createOrder`. |
+| `WebLarekAPI` | `src/components/api/WebLarekAPI.ts` | Инкапсулирует HTTP-запросы (`fetch`). Методы: `getProductList`, `getProduct`, `createOrder`. |
 
 ### 3.2 Модели данных
 
@@ -128,11 +128,8 @@ npm run build
 * **Геттеры**
   * `order: IOrder` — актуальный объект заказа, собирается из `_orderForm` и `basketModel`.
 * **Методы**
-  * `setOrderField(field, value): void` — обновляет способ оплаты или адрес и проводит валидацию.
-  * `setContactsField(field, value): void` — обновляет email или телефон и проводит валидацию.
-  * `validateOrder(): boolean` — проверяет заполненность оплаты и адреса.
-  * `validateContacts(): boolean` — проверяет email и телефон.
-  * `clearOrder(): void` — сбрасывает данные заказа.
+  * `setField(field, value): void` — обновляет любое поле заказа (способ оплаты, адрес, email, телефон) и автоматически проводит валидацию всех полей. При изменении эмитит события `formErrors:change`, а при успешной валидации частей формы — `order:ready` или `contacts:ready`.
+  * `clearOrder(): void` — сбрасывает данные заказа и эмитит `order:clear`.
   * `getOrderData(): IOrder` — возвращает финальный объект для API.
 
 ### 3.3 Представления (View-компоненты)
@@ -158,8 +155,8 @@ npm run build
   * `_price` – цена (`span`)
   * `_category` – категория (`span`)
   * `_description` – описание (`p / li`)
-  * `_button` – «Купить» / «Убрать» (`button`)
-* **Ключевые методы/сетторы**: `id`, `title`, `image`, `price`, `category`, `description`, `button`, `buttonDisabled`.
+  * `_button` – «В корзину» / «Убрать из корзины» (`button`)
+* **Методы**: свойства устанавливаются через метод `render(data)`, который принимает объект с полями `id`, `title`, `image`, `price`, `category`, `description`, `button`.
 
 #### 3.3.2 Basket — список корзины
 
@@ -229,12 +226,12 @@ npm run build
 
 ### 3.4 Взаимодействие компонентов
 
-1. Пользователь кликает по `Card` → `Card` эмитит `card:select`.
-2. [`Presenter`](./src/index.ts) ловит событие, создаёт компонент «детали товара» (расширенную `Card`) с переданным объектом товара, вставляет его в контент `Modal` и открывает окно.
-3. «Купить» → `Card` эмитит `card:add`; `BasketModel.add()` обновляет Map и шлёт `basket:changed`.
+1. Пользователь кликает по `Card` → `Card` через коллбэк вызывает `catalogModel.setPreview(item)`.
+2. `CatalogModel` эмитит `preview:changed`, [Presenter в `src/index.ts`](./src/index.ts) ловит событие, создаёт превью товара с переданным объектом, вставляет его в контент `Modal` и открывает окно.
+3. «В корзину» → через коллбэк вызывается `basketModel.add(item)`, который обновляет Map и эмитит `basket:changed`.
 4. `Page` подписан на `basket:changed` и обновляет счётчик, `Basket` — перерисовывает список.
-5. При оформлении `OrderForm` и `ContactsForm` сбрасывают валидность в `OrderModel` и активируют/деактивируют кнопки.
-6. `OrderModel` собирает финальный объект и отдаёт `Presenter` → `WebLarekAPI.createOrder()`.
+5. При оформлении `OrderForm` и `ContactsForm` отправляют изменения в `OrderModel.setField()`, который проводит валидацию и активирует/деактивирует кнопки через события `order:ready` / `contacts:ready`.
+6. `OrderModel` собирает финальный объект и отдаёт Presenter → `WebLarekAPI.createOrder()`.
 
 ---
 
@@ -247,7 +244,7 @@ npm run build
 | `IProduct` | Объект товара из API. |
 | `ICard` | Данные, требуемые компоненту `Card`. |
 | `IBasketItem` | Упрощённый товар в корзине. |
-| `IOrderDelivery` / `IOrderContacts` | Шаги формы заказа. |
+| `IOrderForm` / `IContactsForm` | Шаги формы заказа. |
 | `IOrder` | Финальный объект, отправляемый `POST /order`. |
 | `IAppEvents` | Интерфейс словаря строковых констант всех внутренних событий. |
 
@@ -257,9 +254,9 @@ npm run build
 
 ## 5. Процессы в приложении
 
-1. **Загрузка каталога** – при инициализации `Presenter` вызывает `WebLarekAPI.getProducts`, передаёт данные в `CatalogModel`, которая шлёт `catalog:loaded`.
-2. **Добавление в корзину** – `BasketModel` изменяет Map, `Basket` и `Page` перерисовываются.
-3. **Оформление** – две формы наследуют `Form`, обмен данными идёт через `OrderModel`.
+1. **Загрузка каталога** – при инициализации Presenter (`src/index.ts`) вызывает `WebLarekAPI.getProductList()`, передаёт данные в `CatalogModel.setItems()`, которая эмитит `items:changed`.
+2. **Добавление в корзину** – `BasketModel` изменяет Map, `Basket` и `Page` перерисовываются по событию `basket:changed`.
+3. **Оформление** – две формы наследуют `Form`, обмен данными идёт через `OrderModel.setField()` с автоматической валидацией.
 4. **Оплата** – `OrderModel` генерирует `IOrder`, API возвращает `id` + `total`, открывается `Success`.
 
 Каждый шаг реализован через события; прямых ссылок Model ↔ View нет.
