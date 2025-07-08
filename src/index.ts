@@ -66,6 +66,13 @@ const basket = new Basket(cloneTemplate(basketTemplate), events);
 const orderForm = new OrderForm(cloneTemplate(orderTemplate), events);
 const contactsForm = new ContactsForm(cloneTemplate(contactsTemplate), events);
 
+// Сообщение об успешном заказе создаётся один раз и переиспользуется
+const success = new Success(cloneTemplate(successTemplate), {
+	onClick: () => {
+		modal.close();
+	},
+});
+
 // Дальше запишем обработчики событий
 
 // Изменения элементов каталога
@@ -242,12 +249,6 @@ events.on('contacts:submit', () => {
 	api
 		.createOrder(orderModel.getOrderData())
 		.then((result) => {
-			const success = new Success(cloneTemplate(successTemplate), {
-				onClick: () => {
-					modal.close();
-				},
-			});
-
 			modal.render({
 				content: success.render({
 					total: result.total,
