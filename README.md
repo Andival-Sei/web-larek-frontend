@@ -80,6 +80,61 @@ npm run build
 | `BasketModel` | Хранит Map товаров, добавленных в корзину, считает итоговую сумму и количество. |
 | `OrderModel` | Содержит промежуточные данные заказа (доставка, контакты), валидирует формы и формирует итоговый объект заказа. |
 
+#### 3.2.1 CatalogModel — каталог товаров
+
+* **Назначение**: единственный источник информации о загруженных товарах каталога, а также о выбранном пользователем товаре для предварительного просмотра.
+* **Наследование**: `extends Model<ICatalogModel>`.
+* **Конструктор**: `(data: Partial<ICatalogModel>, events: IEvents)`
+  * `data` — начальное состояние (может быть пустым).
+  * `events` — экземпляр брокера событий для взаимодействия с другими слоями.
+* **Поля**
+  * `_items: IProduct[]` — актуальный список товаров.
+  * `_preview: string \| null` — `id` товара, выбранного для превью, либо `null`.
+  * `_loading: boolean` — индикатор загрузки каталога.
+* **Методы**
+  * `setItems(items: IProduct[]): void` — сохраняет массив товаров и эмитит `items:changed`.
+  * `getItems(): IProduct[]` — возвращает копию массива `_items`.
+  * `getProduct(id: string): IProduct \| undefined` — ищет товар по `id`.
+  * `setPreview(product: IProduct): void` — устанавливает текущий товар-превью и эмитит `preview:changed`.
+  * `getPreview(): IProduct \| null` — возвращает объект товара для превью или `null`.
+  * `setLoading(state: boolean): void` — меняет флаг загрузки.
+  * `isLoading(): boolean` — текущий статус загрузки.
+
+#### 3.2.2 BasketModel — корзина покупателя
+
+* **Назначение**: управляет набором выбранных товаров и предоставляет агрегированные данные (количество, сумма).
+* **Наследование**: `extends Model<IBasketModel>`.
+* **Конструктор**: `(data: Partial<IBasketModel>, events: IEvents)`.
+* **Поля**
+  * `_items: Map<string, IBasketItem>` — коллекция позиций в корзине, ключ — `id` товара.
+* **Методы**
+  * `add(product: IProduct): void` — кладёт товар в корзину и эмитит `basket:changed`.
+  * `remove(id: string): void` — убирает товар и эмитит `basket:changed`.
+  * `clear(): void` — очищает корзину.
+  * `getItems(): IBasketItem[]` — массив позиций корзины.
+  * `getCount(): number` — количество товаров.
+  * `getTotal(): number` — суммарная стоимость.
+  * `contains(id: string): boolean` — проверка наличия товара.
+
+#### 3.2.3 OrderModel — оформление заказа
+
+* **Назначение**: хранит данные, введённые в формах оплаты и контактов, выполняет валидацию и формирует финальный объект `IOrder` на основании данных корзины.
+* **Наследование**: `extends Model<IOrderModel>`.
+* **Конструктор**: `(data: Partial<IOrderModel>, events: IEvents, basketModel: IBasketModel)`
+  * `basketModel` передаётся для вычисления суммы и списка товаров — таким образом, стоимость и состав заказа **не дублируются**, а вычисляются на лету (SSOT).
+* **Поля**
+  * `_orderForm: IOrderForm & IContactsForm` — промежуточные данные, введённые пользователем.
+  * `formErrors: FormErrors` — объект текущих ошибок валидации.
+* **Геттеры**
+  * `order: IOrder` — актуальный объект заказа, собирается из `_orderForm` и `basketModel`.
+* **Методы**
+  * `setOrderField(field, value): void` — обновляет способ оплаты или адрес и проводит валидацию.
+  * `setContactsField(field, value): void` — обновляет email или телефон и проводит валидацию.
+  * `validateOrder(): boolean` — проверяет заполненность оплаты и адреса.
+  * `validateContacts(): boolean` — проверяет email и телефон.
+  * `clearOrder(): void` — сбрасывает данные заказа.
+  * `getOrderData(): IOrder` — возвращает финальный объект для API.
+
 ### 3.3 Представления (View-компоненты)
 
 | Компонент | Файл | Функция |
