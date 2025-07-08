@@ -117,12 +117,8 @@ events.on('preview:changed', (item: IProduct) => {
 	};
 
 	if (item) {
-		api
-			.getProduct(item.id)
-			.then(showItem)
-			.catch((err) => {
-				console.error(err);
-			});
+		// Товар уже есть в CatalogModel, повторный запрос к API не нужен
+		showItem(item);
 	} else {
 		modal.close();
 	}
