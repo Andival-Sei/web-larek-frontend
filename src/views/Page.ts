@@ -15,10 +15,10 @@ export class Page extends Component<IPage> {
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
 
-		this._counter = ensureElement(settings.page.basketCounter);
-		this._catalog = ensureElement(settings.page.catalog);
-		this._wrapper = ensureElement(settings.page.wrapper);
-		this._basket = ensureElement(settings.page.basket);
+		this._counter = ensureElement(settings.page.basketCounter, container);
+		this._catalog = ensureElement(settings.page.catalog, container);
+		this._wrapper = ensureElement(settings.page.wrapper, container);
+		this._basket = ensureElement(settings.page.basket, container);
 
 		this._basket.addEventListener('click', () => {
 			this.events.emit('basket:open');
