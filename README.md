@@ -236,8 +236,6 @@ npm run build
 5. При оформлении `OrderForm` и `ContactsForm` сбрасывают валидность в `OrderModel` и активируют/деактивируют кнопки.
 6. `OrderModel` собирает финальный объект и отдаёт `Presenter` → `WebLarekAPI.createOrder()`.
 
-Диаграмму классов (PNG) можно найти в `docs/uml.png`.
-
 ---
 
 ## 4. Данные и типы
