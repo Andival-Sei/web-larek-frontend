@@ -215,11 +215,14 @@ events.on(
 	(data: { field: keyof IOrderForm; value: string }) => {
 		orderModel.setOrderField(data.field, data.value);
 
-		// Перерисовываем форму, чтобы подсветка способа оплаты обновилась
+		// вычисляем актуальную валидность на основании ошибок модели,
+		// чтобы не обращаться к данным представления
+		const orderValid =
+			!orderModel.formErrors.payment && !orderModel.formErrors.address;
 		orderForm.render({
 			payment: orderModel.order.payment,
 			address: orderModel.order.address,
-			valid: orderForm.valid,
+			valid: orderValid,
 			errors: [],
 		});
 	}
