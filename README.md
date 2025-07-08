@@ -148,6 +148,85 @@ npm run build
 | `Success` | `src/views/Success.ts` | Модалка успешной покупки. |
 | `Page` | `src/views/Page.ts` | Шапка + основной контейнер. Отображает счётчик корзины. |
 
+#### 3.3.1 Card — карточка товара
+
+* **Наследование**: `extends Component<ICard>`
+* **Конструктор**: `(container: HTMLElement, actions?: ICardActions)`
+* **Сохраняемые элементы**
+  * `_title` – заголовок товара (`h3`)
+  * `_image` – картинка (`img`)
+  * `_price` – цена (`span`)
+  * `_category` – категория (`span`)
+  * `_description` – описание (`p / li`)
+  * `_button` – «Купить» / «Убрать» (`button`)
+* **Ключевые методы/сетторы**: `id`, `title`, `image`, `price`, `category`, `description`, `button`, `buttonDisabled`.
+
+#### 3.3.2 Basket — список корзины
+
+* **Наследование**: `extends Component<IBasketView>`
+* **Конструктор**: `(container: HTMLElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_list` – контейнер для позиций корзины (`ul`)
+  * `_total` – сумма заказа (`span`)
+  * `_button` – кнопка «Оформить» (`button`)
+* **Методы/сетторы**: `items`, `total`, `buttonDisabled`.
+
+#### 3.3.3 Modal — всплывающее окно
+
+* **Наследование**: `extends Component<IModalData>`
+* **Конструктор**: `(container: HTMLElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_closeButton` – крестик закрытия (`button`)
+  * `_content` – область контента (`div`)
+* **Методы**: `content`, `open`, `close`, `render`.
+
+#### 3.3.4 Form (базовый класс)
+
+* **Наследование**: `extends Component<IForm>`
+* **Конструктор**: `(container: HTMLFormElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_submit` – кнопка отправки формы (`button`)
+  * `_errors` – блок ошибок валидации (`div` / `span`)
+* **Методы**: `onInputChange`, `valid`, `errors`, `render`.
+
+#### 3.3.5 OrderForm — выбор оплаты и адреса
+
+* **Наследование**: `extends Form<IOrderForm>`
+* **Конструктор**: `(container: HTMLFormElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_paymentButtons` – массив кнопок способов оплаты (`button`)
+  * `_addressInput` – поле адреса (`input`)
+* **Методы**: `address`, `render` (переопределён для подсветки активной оплаты).
+
+#### 3.3.6 ContactsForm — контактные данные
+
+* **Наследование**: `extends Form<IContactsForm>`
+* **Конструктор**: `(container: HTMLFormElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_emailInput` – поле email (`input`)
+  * `_phoneInput` – поле телефона (`input`)
+* **Методы**: `email`, `phone`.
+
+#### 3.3.7 Success — окно успешной оплаты
+
+* **Наследование**: `extends Component<ISuccess>`
+* **Конструктор**: `(container: HTMLElement, actions: ISuccessActions)`
+* **Сохраняемые элементы**
+  * `_close` – кнопка закрытия (`button`)
+  * `_total` – сумма заказа (`span`)
+* **Методы**: `total`.
+
+#### 3.3.8 Page — обёртка страницы
+
+* **Наследование**: `extends Component<IPage>`
+* **Конструктор**: `(container: HTMLElement, events: IEvents)`
+* **Сохраняемые элементы**
+  * `_counter` – счётчик товаров в корзине (`span`)
+  * `_catalog` – грид каталога (`section` / `div`)
+  * `_wrapper` – обёртка контента (`div`)
+  * `_basket` – иконка/кнопка корзины (`button` / `div`)
+* **Методы/сетторы**: `counter`, `catalog`, `locked`.
+
 ### 3.4 Взаимодействие компонентов
 
 1. Пользователь кликает по `Card` → `Card` эмитит `card:select`.
