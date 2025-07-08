@@ -213,7 +213,9 @@ events.on(
 events.on(
 	/^order\..*:change/,
 	(data: { field: keyof IOrderForm; value: string }) => {
-		orderModel.setOrderField(data.field, data.value);
+		// Обновляем модель заказа, не привязываясь к конкретным формам
+		// (модель сама определит, что именно изменилось)
+		orderModel.setField(data.field, data.value);
 
 		// вычисляем актуальную валидность на основании ошибок модели,
 		// чтобы не обращаться к данным представления
@@ -231,7 +233,7 @@ events.on(
 events.on(
 	/^contacts\..*:change/,
 	(data: { field: keyof IContactsForm; value: string }) => {
-		orderModel.setContactsField(data.field, data.value);
+		orderModel.setField(data.field as keyof (IOrderForm & IContactsForm), data.value);
 	}
 );
 

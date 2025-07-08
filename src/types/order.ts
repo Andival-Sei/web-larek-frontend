@@ -33,8 +33,10 @@ export type FormErrors = Partial<Record<keyof IOrder, string>>;
 export interface IOrderModel {
 	order: IOrder;
 	formErrors: FormErrors;
-	setOrderField(field: keyof IOrderForm, value: string): void;
-	setContactsField(field: keyof IContactsForm, value: string): void;
+	setField(
+		field: keyof (IOrderForm & IContactsForm),
+		value: string | PaymentMethod
+	): void;
 	validateOrder(): boolean;
 	validateContacts(): boolean;
 	clearOrder(): void;

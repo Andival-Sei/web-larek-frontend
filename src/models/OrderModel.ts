@@ -40,27 +40,51 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 	}
 
 	/**
-	 * Установить поле формы заказа
+	 * Установить значение поля заказа
 	 */
-	setOrderField(field: keyof IOrderForm, value: string): void {
+	setField(
+		field: keyof (IOrderForm & IContactsForm),
+		value: string | PaymentMethod
+	): void {
+		// Сохраняем значение в модели, приводя к корректному типу при необходимости
 		if (field === 'payment') {
 			this._orderForm[field] = value as PaymentMethod;
 		} else {
-			this._orderForm[field] = value;
+			this._orderForm[field] = value as string;
 		}
 
-		if (this.validateOrder()) {
+		// Валидируем все поля единым проходом, чтобы исключить перезапись ошибок
+		const errors: typeof this.formErrors = {};
+
+		// Проверка оплаты и адреса
+		if (!this._orderForm.payment) {
+			errors.payment = 'Необходимо указать способ оплаты';
+		}
+		if (!this._orderForm.address) {
+			errors.address = 'Необходимо указать адрес';
+		}
+
+		// Проверка контактов
+		if (!this._orderForm.email) {
+			errors.email = 'Необходимо указать email';
+		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this._orderForm.email)) {
+			errors.email = 'Некорректный формат email';
+		}
+		if (!this._orderForm.phone) {
+			errors.phone = 'Необходимо указать телефон';
+		}
+
+		this.formErrors = errors;
+		this.events.emit('formErrors:change', this.formErrors);
+
+		// Определяем валидность частей формы
+		const orderValid = !errors.payment && !errors.address;
+		const contactsValid = !errors.email && !errors.phone;
+
+		if (orderValid) {
 			this.events.emit('order:ready', this.order);
 		}
-	}
-
-	/**
-	 * Установить поле формы контактов
-	 */
-	setContactsField(field: keyof IContactsForm, value: string): void {
-		this._orderForm[field] = value;
-
-		if (this.validateContacts()) {
+		if (contactsValid) {
 			this.events.emit('contacts:ready', this.order);
 		}
 	}
