@@ -230,7 +230,7 @@ npm run build
 2. `CatalogModel` эмитит `preview:changed`, [Presenter в `src/index.ts`](./src/index.ts) ловит событие, создаёт превью товара с переданным объектом, вставляет его в контент `Modal` и открывает окно.
 3. «В корзину» → через коллбэк вызывается `basketModel.add(item)`, который обновляет Map и эмитит `basket:changed`.
 4. `Page` подписан на `basket:changed` и обновляет счётчик, `Basket` — перерисовывает список.
-5. При оформлении `OrderForm` и `ContactsForm` отправляют изменения в `OrderModel.setField()`, который проводит валидацию и активирует/деактивирует кнопки через события `order:ready` / `contacts:ready`.
+5. `OrderForm` и `ContactsForm` передают введённые значения в `OrderModel.setField()`. Модель валидирует данные и эмитит `formErrors:change`; Presenter реагирует на это событие и обновляет ошибки и активность кнопок форм.
 6. `OrderModel` собирает финальный объект и отдаёт Presenter → `WebLarekAPI.createOrder()`.
 
 ---
@@ -248,7 +248,7 @@ npm run build
 | `IOrder` | Финальный объект, отправляемый `POST /order`. |
 | `IAppEvents` | Интерфейс словаря строковых констант всех внутренних событий. |
 
-Используются строгие настройки TS (`strict`, `noImplicitAny`).
+Включена опция `noImplicitAny` для строгой типизации.
 
 ---
 
