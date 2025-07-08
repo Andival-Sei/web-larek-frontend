@@ -65,10 +65,9 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 		}
 
 		// Проверка контактов
+		// По ТЗ требуется лишь факт заполнения поля
 		if (!this._orderForm.email) {
 			errors.email = 'Необходимо указать email';
-		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this._orderForm.email)) {
-			errors.email = 'Некорректный формат email';
 		}
 		if (!this._orderForm.phone) {
 			errors.phone = 'Необходимо указать телефон';
@@ -89,45 +88,8 @@ export class OrderModel extends Model<IOrderModel> implements IOrderModel {
 		}
 	}
 
-	/**
-	 * Валидация формы заказа (способ оплаты + адрес)
-	 */
-	validateOrder(): boolean {
-		const errors: typeof this.formErrors = {};
-
-		if (!this._orderForm.payment) {
-			errors.payment = 'Необходимо указать способ оплаты';
-		}
-
-		if (!this._orderForm.address) {
-			errors.address = 'Необходимо указать адрес';
-		}
-
-		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
-		return Object.keys(errors).length === 0;
-	}
-
-	/**
-	 * Валидация формы контактов (email + телефон)
-	 */
-	validateContacts(): boolean {
-		const errors: typeof this.formErrors = {};
-
-		if (!this._orderForm.email) {
-			errors.email = 'Необходимо указать email';
-		} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this._orderForm.email)) {
-			errors.email = 'Некорректный формат email';
-		}
-
-		if (!this._orderForm.phone) {
-			errors.phone = 'Необходимо указать телефон';
-		}
-
-		this.formErrors = errors;
-		this.events.emit('formErrors:change', this.formErrors);
-		return Object.keys(errors).length === 0;
-	}
+	// Методы validateOrder / validateContacts были удалены как неиспользуемые:
+	// вся актуальная проверка выполняется при изменении полей в setField.
 
 	/**
 	 * Очистить заказ

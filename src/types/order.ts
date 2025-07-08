@@ -37,7 +37,6 @@ export interface IOrderModel {
 		field: keyof (IOrderForm & IContactsForm),
 		value: string | PaymentMethod
 	): void;
-	validateOrder(): boolean;
-	validateContacts(): boolean;
+	// validateOrder и validateContacts убраны; валидация выполняется внутри setField.
 	clearOrder(): void;
 }
